@@ -1,0 +1,4 @@
+source setup.sh
+
+cd tasks
+bsub python runme.py -s {starting date} -d {days}

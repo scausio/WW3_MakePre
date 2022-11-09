@@ -1,0 +1,29 @@
+$ -------------------------------------------------------------------- $
+$ WAVEWATCH III Grid preprocessor input file                           $
+$ -------------------------------------------------------------------- $
+  {{model}}  
+$
+   {{frequencyIncrement}}  {{minFrequency}}  {{NoFrequencies}}  {{NoDirections}}  0.5
+   F T T T F T
+   {{global_TS}}  {{CFL_TS}} {{refraction_TS}} {{minimum_TS}}
+${{#namelist}}
+  {{{n}}}/{{/namelist}}
+END OF NAMELISTS
+$
+  'RECT' T 'NONE'
+   {{lonSize}}     {{latSize}}
+   {{lonResolution}}   {{latResolution}}    1.00
+   {{minLon}}   {{minLat}}   1.00
+   {{depthLimit}}   {{minDepth}}  20  -1  1  1 '(....)'  'NAME' {{bottomFile}}
+   30  0.010000  1  1 '(....)'  'NAME' {{obstFile}}
+   40            1  1 '(....)'  'NAME' {{maskFile}}
+$
+$
+$
+$
+$
+$
+    0.    0.    0.    0.       0
+$ -------------------------------------------------------------------- $
+$ End of input file                                                    $
+$ -------------------------------------------------------------------- $

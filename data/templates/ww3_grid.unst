@@ -1,0 +1,71 @@
+ $ -------------------------------------------------------------------- $
+$ WAVEWATCH III Grid preprocessor input file                           $
+$ -------------------------------------------------------------------- $
+  {{model}}  
+$
+   {{frequencyIncrement}}  {{minFrequency}}  {{NoFrequencies}}  {{NoDirections}}  0.5
+   F T T T F T
+   {{global_TS}}  {{CFL_TS}} {{refraction_TS}} {{minimum_TS}}
+$
+$ Start of namelist input section ------------------------------------ $
+$.
+${{#namelist}}
+  {{{n}}}/{{/namelist}}
+END OF NAMELISTS
+$
+ {{gridType}} T F
+$
+    {{depthLimit}}  {{minDepth}}   20  {{scaleFactor}} 1 1 '(20f10.2)'  'NAME'  {{bottomFile}}
+$
+$ If the above unit number equals 10, the bottom data is read from
+$ this file and follows below (no intermediate comment lines allowed).
+$
+$   1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+$
+$ If sub-grid information is avalaible as indicated by FLAGTR above,
+$ additional input to define this is needed below. In such cases a
+$ field of fractional obstructions at or between grid points needs to
+$ be supplied.  First the location and format of the data is defined
+$ by (as above) :
+$  - Unit number of file (can be 10, and/or identical to bottem depth
+$    unit), scale factor for fractional obstruction, IDLA, IDFM,
+$    format for formatted read, FROM and filename
+$
+$   10 0.2  3 1 '(....)' 'NAME' 'obstr.inp'
+$
+$ *** NOTE if this unit number is the same as the previous bottom
+$     depth unit number, it is assumed that this is the same file
+$     without further checks.                                      ***
+$
+$ If the above unit number equals 10, the bottom data is read from
+$ this file and follows below (no intermediate comment lines allowed,
+$ except between the two fields).
+$
+   10 3 1 '(....)' 'PART' 'mapsta.inp'
+$ Input boundary points ---------------------------------------------- $
+    {{#bc}}{{nodes}}
+    {{/bc}}  0 0 F
+$
+$
+$
+$ Excluded grid points from segment data ( FROM != PART )
+$   First defined as lines, identical to the definition of the input
+$   boundary points, and closed the same way.
+$
+      0   0   F
+$
+$   Second, define a point in a closed body of sea points to remove
+$   the entire body os sea points. Also close by point (0,0)
+$
+      0   0
+$
+$ Output boundary points --------------------------------------------- $
+$ Output boundary points are defined as a number of straight lines,
+$
+$  Close list by defining line with 0 points (mandatory)
+$
+       0.    0.    0.    0.       0
+$
+$ -------------------------------------------------------------------- $
+$ End of input file                                                    $
+$ -------------------------------------------------------------------- $

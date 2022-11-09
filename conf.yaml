@@ -1,0 +1,108 @@
+config:
+  run_specifics:
+    project_queue: 'R000'
+    serial_queue: 's_short'
+    base: /work/opa/ww3_cst-dev/WW3_MakePre
+    wd: /work/opa/ww3_cst-dev/ianos_inputs
+  copernicusFiles:
+    parentWave:
+      lat: latitude
+      lon: longitude
+      time: time
+      hs: 'VHM0'     
+      tp: 'VTPK'  #'VTPK' #'VTM01'     
+      efth: 'EFTH'  #! NO NEEDED FOR OPERATIONAL   
+      freq: '' #'frequency'  #! NO NEEDED FOR OPERATIONAL
+      dir: 'VMDR' #'direction'  #'VMDR'   
+      fileConf:
+        freq: 1h  
+        producer: HCMR
+        parameter: WAVE  # WAVE
+        config: MEDWAM3
+        region: MEDATL
+        version: "sv07.00"
+        fileTemplate:
+          base: '/data/inputs/metocean/historical/model/ocean/HCMR/WAM_CMEMS/analysis/{d[freq]}/{d[year]}/{d[month]}'    #'/data/inputs/metocean/rolling/ocean/HCMR/CMEMS/3.1analysis/{d[freq]}/{d[yesterday]}'
+          name: '{d[date]}*-{d[producer]}--{d[parameter]}-{d[config]}-{d[region]}-*{d[version]}.nc*'
+    parentHydro: #! NO NEEDED FOR OPERATIONAL
+      waterVelocity:
+          u: u_velocity
+          v: v_velocity
+      waterLevel:
+          ssh: water_level
+      surfaceTemp:
+          sst: thetao
+      lon: longitude
+      lat: latitude
+      time: time
+      depth: level
+      fileConf:
+        freq: h  
+        producer: X
+        config: X
+        region: X
+        parameter: X
+        version: "sv0x.00"
+        fileTemplate:
+          base: '/work/opa/ww3_cst-dev/shyfem_forcing'
+          name: 'mzakwaves4.ous.unstr.nc'
+    meteoData:
+      lat: lat
+      lon: lon
+      time: time
+      u:  U10M
+      v:  V10M
+      T2M: T2M
+      ww3Name: WND
+      fileConf:
+        info: select WND or WNS in ww3Name to select wind only or wind and dT.
+        freq: 6h  # daily
+        producer: ECMWF
+        config: AM0100
+        region: MEDATL
+        parameter: ""
+        version: "fv11.00"
+        fileTemplate:
+          base: '/data/inputs/metocean/historical/model/atmos/ECMWF/IFS_010/analysis/{d[freq]}/netcdf/{d[year]}/{d[month]}/'
+          name: '{d[date]}-{d[producer]}---{d[config]}-{d[region]}-*{d[version]}.nc*'
+  cutArea:
+    lat: [28.10,43.04 ]
+    lon: [5.03,25.82]
+  forcings:
+    wind:  # available keys are ['REG','UNST', 'F']
+      type: 'REG'
+    currents:
+      type: 'F'
+    water_level:
+      type: 'F'
+    deltaT:
+      type: 'F'
+  model:
+   name: ianos
+   grid: /work/opa/ww3_cst-dev/WW3_MakePre/data/msh/ianos_swc.msh
+   minFrequency: 0.05
+   NoFrequencies: 30
+   NoDirections: 24
+   frequencyIncrement: 1.1
+   depthLimit: 0
+   minDepth: 0.5
+   depthScaleFactor: -1
+   noNodes: 199543
+   outputTime: 3600 
+   gridType: "UNST"
+   namelist: ["&SIN4 BETAMAX=1.65",
+               "REF1 REFCOAST=0.1",
+               "&UNST UGOBCAUTO=F, IMPFSN =  T/"]
+   timeStep:
+    global_TS: 200
+    CFL_TS: 50
+    refraction_TS: 50
+    minimum_TS: 10
+  lateralBoundaries:
+    refreshIndices: 'T'
+    memoryUsage: '40GB'
+    path: /work/opa/ww3_cst-dev/WW3_MakePre/data/boundary/BC_ianos_swc.dat
+    type: averaged  #averaged # , partitioned # # available keys are [averaged, partitioned  'F'] fromSpectra computed, fromParent, F
+    spectralPartitions: ['WW','SW1','SW2'] #if type==partitioned;
+  templates: /work/opa/ww3_cst-dev/WW3_MakePre/data/templates
+  executable: /users_home/opa/ww3_cst-dev/bin/WW3_6.07/model/exe

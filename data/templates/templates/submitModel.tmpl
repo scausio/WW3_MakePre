@@ -1,0 +1,28 @@
+#BSUB -o %J_log.out
+#BSUB -e %J_log.err
+#BSUB -q {{queue}}
+#BSUB -R "span[ptile=36]"
+#BSUB -n {{cores}}
+#BSUB -K
+#BSUB -P {{project}}
+
+export I_MPI_PLATFORM="skx"
+export I_MPI_EXTRA_FILE_SYSTEM=1
+export I_MPI_HYDRA_BOOTSTRAP="lsf"
+export I_MPI_HYDRA_BRANCH_COUNT=$(( $( echo "${LSB_MCPU_HOSTS}" | wc -w ) / 2 ))
+export I_MPI_HYDRA_COLLECTIVE_LAUNCH=1
+
+mpiexec.hydra {{shell}}
+if [ $? -eq 0 ]
+then
+  echo "Model run successfully"
+  touch {{wd}}/SHEL_complete
+  exit 0
+else
+  echo "Model run failed" >&2
+  exit 1
+fi
+
+
+
+
